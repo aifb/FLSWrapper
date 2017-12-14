@@ -1,4 +1,4 @@
-package edu.kit.aifb.rdfswagger;
+package edu.kit.aifb.openapi2linkeddata;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -31,11 +31,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
-import edu.kit.aifb.rdfswagger.GsonTools.ConflictStrategy;
-import edu.kit.aifb.rdfswagger.GsonTools.JsonObjectExtensionConflictException;
+import edu.kit.aifb.openapi2linkeddata.GsonTools.ConflictStrategy;
+import edu.kit.aifb.openapi2linkeddata.GsonTools.JsonObjectExtensionConflictException;
 
 @Path("/rdfswagger.{type:jsonld|xml|ttl}")
-public class RdfSwagger
+public class OpenAPI2LinkedDataTools
 {
 	public static String getBaseUrl(HttpServletRequest request) 
 	{
@@ -71,10 +71,9 @@ public class RdfSwagger
 			{
 				request = (HttpURLConnection) url.openConnection();
 				request.connect();
-				//JsonElement root = new JsonParser().parse(new InputStreamReader((InputStream)request.getContent()));
 				
 				JsonParser jsonParser1 = new JsonParser();
-				body = (JsonObject)jsonParser1.parse(new InputStreamReader((InputStream)request.getContent()));
+				body = (JsonObject)jsonParser1.parse(new InputStreamReader((InputStream)request.getContent())); // Swagger's generated code will merged with context
 				JsonObject mergedJSON = mergeJSONObjects(context, body);
 			} 
 			catch (IOException e1)
@@ -90,32 +89,13 @@ public class RdfSwagger
 		}	
 	}
 	public JsonObject mergeJSONObjects(JsonObject json1, JsonObject json2) {
-	    JsonObject temp = json1;
+	    JsonObject mergedJSON = json1;
 	    try {
-            GsonTools.extendJsonObject(temp, ConflictStrategy.THROW_EXCEPTION, json2);
+            GsonTools.extendJsonObject(mergedJSON, ConflictStrategy.THROW_EXCEPTION, json2);
         } catch (JsonObjectExtensionConflictException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
-		/*Iterator<String> i1 = json1.get
-		Iterator<String> i2 = json2.keys();
-		String tmp_key;
-		while(i1.hasNext()) {
-			tmp_key = (String) i1.next();
-			mergedJSON.add(tmp_key, (JsonElement) json1.get(tmp_key));
-		}
-		while(i2.hasNext()) {
-			tmp_key = (String) i2.next();
-			mergedJSON.add(tmp_key, (JsonElement) json2.get(tmp_key));
-		}
-		JsonObject d = mergedJSON;*/
-		String result = (json1.toString().substring(0, json1.toString().length() - 1) + ",").concat(json2.toString().substring(1, json2.toString().length()));
-		JsonParser parser = new JsonParser();
-		JsonObject o = parser.parse(result).getAsJsonObject();
-		//mergedJSON = new JSONObject(result);
-		System.out.println(result);
-		//System.out.println(mergedJSON.toString());
-		return temp;
+		return mergedJSON;
 	}
 }

@@ -1,4 +1,4 @@
-package edu.kit.aifb.rdfswagger;
+package edu.kit.aifb.openapi2linkeddata;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
