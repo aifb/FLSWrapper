@@ -1,0 +1,60 @@
+{
+	"@context":{
+      "schema":"http://swagger.io/v2/schema.json#definitions/schema",
+      "description":"http://json-schema.org/draft-04/schema#/properties/description",
+      "title":"http://json-schema.org/draft-04/schema#/properties/title",
+      "type":"https://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+      "httpm":"http://www.w3.org/2011/http-methods#",
+      "get":"httpm:GET",
+      "post":"httpm:POST",
+      "put":"httpm:PUT",
+      "delete":"httpm:DELETE",
+      "head":"httpm:HEAD",
+      "options":"httpm:OPTION",
+      "trace":"httpm:TRACE",
+      "patch":"httpm:PATCH",
+      "swagger":"http://swagger.io/v2/schema.json#properties/swagger",
+      "required":"http://json-schema.org/draft-04/schema#/properties/required",
+      "x-hydra-required":"http://www.w3.org/ns/hydra/core#required",
+      <x-hydra-xxx missing: https://www.w3.org/ns/hydra/core >
+      <BSP: "x-hydra-Resource":"https://www.w3.org/ns/hydra/core#Resource", >
+      <BSP: "x-hydra-apiDocumentation":"https://www.w3.org/ns/hydra/core#apiDocumentation", >
+      
+      "X-Rack-Cache":"http://github.com/rtomayko/rack-cache",
+      "security":"http://swagger.io/v2/schema.json#properties/security",
+      "default":"http://swagger.io/v2/schema.json#default",
+      "sampleoauth":"http://example.com#sampleoauth",
+      "contact":"http://swagger.io/v2/schema.json#definitions/contact",
+      "host":"http://swagger.io/v2/schema.json#properties/host",
+      "definitions":"http://swagger.io/v2/schema.json#properties/definitions",
+      "securityDefinitions":"http://swagger.io/v2/schema.json#definitions/securityDefinitions",
+      "email":"http://swagger.io/v2/schema.json#definitions/contact/properties/email",
+      "info":"http://swagger.io/v2/schema.json#properties/info",
+      "consumes":"http://swagger.io/v2/schema.json#properties/consumes",
+      "summary":"http://swagger.io/v2/schema.json#definitions/operation/properties/summary",
+      "x-http-headers":"http://www.w3.org/2011/http#headers",
+      "headers":"http://swagger.io/v2/schema.json#definitions/header",
+      "in":"http://swagger.io/v2/schema.json#bodyParameter/operation/properties/in",
+      "schemes":"http://swagger.io/v2/schema.json#properties/schemes",
+      "termsOfService":"http://example.com#definitions/properties/termsOfService",
+      "version":"http://example.com#definitions/properties/version",
+      "url":"http://www.w3.org/2006/vcard/ns#url",
+      "tags":"http://swagger.io/v2/schema.json#definitions/tags",
+      "license":"http://swagger.io/v2/schema.json#definitions/license",
+      "200":"https://www.w3.org/ns/hydra/core#statusCode",
+      "204":"https://www.w3.org/ns/hydra/core#statusCode",
+      <missing other relevant error codes: https://de.wikipedia.org/wiki/HTTP-Statuscode>
+      
+      "basePath":"http://swagger.io/v2/schema.json#properties/basePath",
+      "paths":"http://swagger.io/v2/schema.json#definitions/paths",
+      "operationId":"http://swagger.io/v2/schema.json#bodyParameter/operation/properties/operationId",
+      "produces":"http://swagger.io/v2/schema.json#properties/produces",
+      "name":"http://purl.org/ontology/wo/name",
+      "responses":"http://swagger.io/v2/schema.json#properties/responses",
+      "externalDocs":"http://swagger.io/v2/schema.json#properties/externalDocs",
+      "parameters":"http://swagger.io/v2/schema.json#properties/parameters",
+      "owl":"http://www.w3.org/2002/07/owl#",
+      "$ref":"owl:sameAs",
+      "properties":"http://json-schema.org/draft-04/schema#properties/properties"
+}
+}
