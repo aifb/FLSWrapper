@@ -16,9 +16,9 @@
       "swagger":"http://swagger.io/v2/schema.json#properties/swagger",
       "required":"http://json-schema.org/draft-04/schema#/properties/required",
       "x-hydra-required":"http://www.w3.org/ns/hydra/core#required",
-      <x-hydra-xxx missing: https://www.w3.org/ns/hydra/core >
-      <BSP: "x-hydra-Resource":"https://www.w3.org/ns/hydra/core#Resource", >
-      <BSP: "x-hydra-apiDocumentation":"https://www.w3.org/ns/hydra/core#apiDocumentation", >
+      "<x-hydra-xxx missing":"https://www.w3.org/ns/hydra/core >",
+      "<BSP: x-hydra-Resource":"https://www.w3.org/ns/hydra/core#Resource", 
+      "<BSP: x-hydra-apiDocumentation":"https://www.w3.org/ns/hydra/core#apiDocumentation", 
       
       "X-Rack-Cache":"http://github.com/rtomayko/rack-cache",
       "security":"http://swagger.io/v2/schema.json#properties/security",
@@ -43,7 +43,7 @@
       "license":"http://swagger.io/v2/schema.json#definitions/license",
       "200":"https://www.w3.org/ns/hydra/core#statusCode",
       "204":"https://www.w3.org/ns/hydra/core#statusCode",
-      <missing other relevant error codes: https://de.wikipedia.org/wiki/HTTP-Statuscode>
+      "<missing other relevant error codes": "https://de.wikipedia.org/wiki/HTTP-Statuscode>",
       
       "basePath":"http://swagger.io/v2/schema.json#properties/basePath",
       "paths":"http://swagger.io/v2/schema.json#definitions/paths",
