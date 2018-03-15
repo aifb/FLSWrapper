@@ -48,9 +48,10 @@ public class OpenAPI2LinkedDataTools
 
 	@GET
 	@Produces("text/html")
-	public void Parser(HttpServletRequest baseRequest)
+	public JsonObject parse(HttpServletRequest baseRequest)
 	{
-		String sURL = "/ksri-km-flswrapper/swagger.json";
+		//String sURL = "/ksri-km-flswrapper/swagger.json";
+	    String sURL = "/swagger.json";
 		String filename = "context.json";
 
 		InputStream in = this.getClass().getClassLoader().getResourceAsStream(filename);
@@ -61,7 +62,8 @@ public class OpenAPI2LinkedDataTools
 	    JsonObject context = (JsonObject)jsonParser.parse(tempContext.toString());
 	    
 		JsonObject body = new JsonObject(); // from swagger generated .json code
-
+		JsonObject mergedJSON = null;
+		
 		URL url;
 		try
 		{
@@ -74,7 +76,8 @@ public class OpenAPI2LinkedDataTools
 				
 				JsonParser jsonParser1 = new JsonParser();
 				body = (JsonObject)jsonParser1.parse(new InputStreamReader((InputStream)request.getContent())); // Swagger's generated code will merged with context
-				JsonObject mergedJSON = mergeJSONObjects(context, body);
+				mergedJSON = mergeJSONObjects(context, body);
+				return mergedJSON;
 			} 
 			catch (IOException e1)
 			{
@@ -86,7 +89,9 @@ public class OpenAPI2LinkedDataTools
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
+		}
+		return mergedJSON;
+		
 	}
 	public JsonObject mergeJSONObjects(JsonObject json1, JsonObject json2) {
 	    JsonObject mergedJSON = json1;
@@ -96,6 +101,7 @@ public class OpenAPI2LinkedDataTools
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+	    System.out.println(mergedJSON);
 		return mergedJSON;
 	}
 }
