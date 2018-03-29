@@ -13,7 +13,9 @@ import java.util.Iterator;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -23,6 +25,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.semanticweb.yars.nx.Node;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -37,6 +40,19 @@ import edu.kit.aifb.openapi2linkeddata.GsonTools.JsonObjectExtensionConflictExce
 
 @Path("/rdfswagger.{type:jsonld|xml|ttl}")
 public class OpenAPI2LinkedDataToolsLocalVersion {
+	
+	
+//	@POST
+//	@Produces({"application/ld+json", "text/turtle"})
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	public Response convertSwagger(JsonObject body) {
+//		
+//		Object nodes = null;
+//	
+//		return Response.ok().entity(new GenericEntity<Iterable<Node[]>>( nodes ) { }).build();
+//	}
+	
+	
     @GET
     @Produces("text/html")
     public JsonObject serialize(String swaggerCodeAsString, String[] arrayOfPaths) {
@@ -56,7 +72,7 @@ public class OpenAPI2LinkedDataToolsLocalVersion {
         
         for (int i = formattedPathStrings.length - 2; i >= 0; i--) {
             formattedPathStrings[i] = new JsonObject();
-            formattedPathStrings[i].addProperty("endpoint", arrayOfPaths[i]);
+            formattedPathStrings[i].addProperty("x-hydra-endpoint", arrayOfPaths[i]);
         }
         
         JsonObject formattedSwaggerCode = jsonParser.parse(swaggerCodeAsString).getAsJsonObject();

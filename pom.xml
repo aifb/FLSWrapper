@@ -11,7 +11,16 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<nxparser.group>com.github.sebbader.nxparser</nxparser.group>
+		<nxparser.version>e7da345297</nxparser.version>
 	</properties>
+
+	<repositories>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://www.jitpack.io</url>
+		</repository>
+	</repositories>
 
 	<dependencies>
 		<dependency>
@@ -55,7 +64,39 @@
 			<version>1.1</version>
 		</dependency>
 
+		<dependency>
+			<groupId>${nxparser.group}</groupId>
+			<artifactId>nxparser-jax-rs</artifactId>
+			<version>${nxparser.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.glassfish.jersey.core</groupId>
+					<artifactId>jersey-common</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.github.jsonld-java</groupId>
+					<artifactId>jsonld-java</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>${nxparser.group}</groupId>
+			<artifactId>nxparser-utilities-nx</artifactId>
+			<version>${nxparser.version}</version>
+		</dependency>
 
 	</dependencies>
-	<artifactId>rdfswagger</artifactId>
+	<artifactId>jsonldparser</artifactId>
 </project>
