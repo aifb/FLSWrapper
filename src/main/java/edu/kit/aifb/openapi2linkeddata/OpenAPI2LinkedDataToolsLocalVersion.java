@@ -9,6 +9,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -34,47 +36,50 @@ import com.google.gson.stream.JsonReader;
 
 import edu.kit.aifb.openapi2linkeddata.GsonTools.ConflictStrategy;
 import edu.kit.aifb.openapi2linkeddata.GsonTools.JsonObjectExtensionConflictException;
+import io.swagger.models.Swagger;
+import io.swagger.util.Json;
 
-@Path("/rdfswagger.{type:jsonld|xml|ttl}")
 public class OpenAPI2LinkedDataToolsLocalVersion {
-    @GET
-    @Produces("text/html")
-    public JsonObject serialize(String swaggerCodeAsString, String[] arrayOfPaths) {
+    public JsonObject serialize(Swagger swaggerObject) {
+        
         String filename = "context.json";
-
-        InputStream in = this.getClass().getClassLoader().getResourceAsStream(filename);
-
-        JSONTokener tokener = new JSONTokener(new InputStreamReader(in));
-        JSONObject tempContext = new JSONObject(tokener); // context for generated swagger file
+        InputStream in = this.getClass().getClassLoader().getResourceAsStream(filename); // read context.json as inputStream
         JsonParser jsonParser = new JsonParser();
-        JsonObject context = (JsonObject)jsonParser.parse(tempContext.toString());
+        JsonObject context = (JsonObject)jsonParser.parse(new InputStreamReader(in).toString()); // Create an JsonObject (gson) from inputStream of context.jason
         
+        Map<String, ?> map = swaggerObject.getPaths(); // It should be better a LinkedHashMap, for this thing Swaggers's Json class must be changed
+                                                       // Map is filled in with the paths. For this the already existing method from swagger core is used
+        Set<String> setOfPaths = map.keySet(); // Set has a default method to convert a map to an array of string, so I used it
+        String[] arrayOfPaths = setOfPaths.toArray(new String[setOfPaths.size()]); // Here the set is converted to Array of Strings
+        
+        // Here hydra-Stuff is written to each path
+        // Since all paths were saved in the Set<String> in the reverse order, this cycle runs "from bottom to top"
         JsonObject[] formattedPathStrings = new JsonObject[arrayOfPaths.length];
-        
-        formattedPathStrings[formattedPathStrings.length - 1] = new JsonObject();
-        formattedPathStrings[formattedPathStrings.length - 1].addProperty("x-hydra-endpoint", arrayOfPaths[arrayOfPaths.length - 1]);
-        
-        for (int i = formattedPathStrings.length - 2; i >= 0; i--) {
+        for (int i = formattedPathStrings.length - 1; i >= 0; i--) {
             formattedPathStrings[i] = new JsonObject();
-            formattedPathStrings[i].addProperty("endpoint", arrayOfPaths[i]);
+            formattedPathStrings[i].addProperty("x-hydra-endpoint", arrayOfPaths[i]); // We once discussed whether x-hydra-endpoint needs to stand everywhere. 
+                                                                                      // Last time we came to the fact that it must actually stand everywhere, in all paths.
+            // Now it looks like this: "x-hydra-endpoint": object, ... "x-hydra-endpoint": object, ... , "x-hydra-endpoint": object, ...
         }
         
-        JsonObject formattedSwaggerCode = jsonParser.parse(swaggerCodeAsString).getAsJsonObject();
+        String swaggerCodeAsString = Json.pretty(swaggerObject);
+        JsonObject formattedSwaggerCode = jsonParser.parse(swaggerCodeAsString).getAsJsonObject(); // The whole swagger.json is saved as a JsonObject
+        
+        JsonObject[] contentOfPaths = new JsonObject[arrayOfPaths.length];
+        // Through swagger.json is iterated and all values of all paths are saved to contentOfPaths. 
+        for(int i = 0; i < contentOfPaths.length; i++) {
+            contentOfPaths[i] = formattedSwaggerCode.get("paths").getAsJsonObject().get(arrayOfPaths[i]).getAsJsonObject(); // In debug mode, it's easy to see what's in contentOfPaths
+        }
         
         JsonArray ar = new JsonArray();
-        JsonObject[] contentOfPaths = new JsonObject[arrayOfPaths.length];
-        for(int i = 0; i < contentOfPaths.length; i++) {
-            contentOfPaths[i] = formattedSwaggerCode.get("paths").getAsJsonObject().get(arrayOfPaths[i]).getAsJsonObject();
-        }
-        
         for(int i = 0, j = formattedPathStrings.length - 1; i < formattedPathStrings.length; i++, j--) {
-            ar.add(mergeJSONObjects(formattedPathStrings[j], contentOfPaths[i]));
+            ar.add(mergeJSONObjects(formattedPathStrings[j], contentOfPaths[i])); // The "new" paths are supplemented with the old contents
         }
-        formattedSwaggerCode.remove("paths");
-        formattedSwaggerCode.add("paths", ar);
         
-        //JsonObject body = jsonParser.parse(swaggerBody).getAsJsonObject(); // from swagger generated .json code
-        return mergeJSONObjects(context, formattedSwaggerCode);
+        formattedSwaggerCode.remove("paths"); // Container "path" is removed from old swagger.json
+        formattedSwaggerCode.add("paths", ar); // In its place, the paths are written in a new format with old contents
+        
+        return mergeJSONObjects(context, formattedSwaggerCode); // Finally, we just need to merge the context with the new swagger.json code
     }
 
     private JsonObject mergeJSONObjects(JsonObject json1, JsonObject json2) {
@@ -82,7 +87,6 @@ public class OpenAPI2LinkedDataToolsLocalVersion {
         try {
             GsonTools.extendJsonObject(mergedJSON, ConflictStrategy.THROW_EXCEPTION, json2);
         } catch (JsonObjectExtensionConflictException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return mergedJSON;
