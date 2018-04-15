@@ -84,6 +84,7 @@ public class OpenAPI2LinkedDataToolsLocalVersion {
 
     private JsonObject mergeJSONObjects(JsonObject json1, JsonObject json2) {
         JsonObject mergedJSON = json1;
+        
         try {
             GsonTools.extendJsonObject(mergedJSON, ConflictStrategy.THROW_EXCEPTION, json2);
         } catch (JsonObjectExtensionConflictException e) {
